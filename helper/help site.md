@@ -15,3 +15,7 @@ code: Startup.ConfigureServices(IServiceCollection services) 中.
 ### 解决 .net core 3.0升级相关问题 (json格式返回，swagger显示格式问题等) ###
 
 [https://www.cnblogs.com/laozhang-is-phi/p/11520048.html#autoid-5-3-0](https://www.cnblogs.com/laozhang-is-phi/p/11520048.html#autoid-5-3-0 "博文")
+
+### C# 源码地址 ###
+
+[https://github.com/SSCLI/sscli20_20060311](https://github.com/SSCLI/sscli20_20060311 "clr相关")
