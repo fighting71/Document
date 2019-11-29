@@ -18,4 +18,10 @@ code: Startup.ConfigureServices(IServiceCollection services) 中.
 
 ### C# 源码地址 ###
 
-[https://github.com/SSCLI/sscli20_20060311](https://github.com/SSCLI/sscli20_20060311 "clr相关")
+[clr相关](https://github.com/SSCLI/sscli20_20060311)
+
+### 文章相关 ###
+
+Thread.BeginCriticalRegion(); 相关：
+
+[关键区域 critical region](https://blogs.msdn.microsoft.com/bclteam/2005/06/13/constrained-execution-regions-and-other-errata-brian-grunkemeyer/)

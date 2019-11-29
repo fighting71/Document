@@ -16,6 +16,7 @@ namespace ConsoleApp.Demo
     {
         public static void Run()
         {
+
             //var type = typeof(int);
             //int a = 3;
             //var type = a.GetType();
