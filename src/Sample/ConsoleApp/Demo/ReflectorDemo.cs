@@ -84,8 +84,15 @@ namespace ConsoleApp.Demo
 
     }
 
-    public class Data
+    public class Father { 
+        public int num { get; set; }
+    }
+
+    public class Data:Father
     {
+
+        public new string num;
+
         public void DoSomething()
         {
         }
