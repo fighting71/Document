@@ -9,3 +9,14 @@ G:\dick\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.As
 G:\dick\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.AssemblyInfo.cs
 G:\dick\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.dll
 G:\dick\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.pdb
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.exe
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.deps.json
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.runtimeconfig.json
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.runtimeconfig.dev.json
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.dll
+D:\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\ConsoleApp.pdb
+D:\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.csprojAssemblyReference.cache
+D:\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.AssemblyInfoInputs.cache
+D:\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.AssemblyInfo.cs
+D:\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.dll
+D:\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.pdb
