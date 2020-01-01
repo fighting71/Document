@@ -7,3 +7,11 @@
 [深入学习Redis（2）：持久化 ](https://www.cnblogs.com/kismetv/p/9137897.html)
 
 [深入学习Redis（3）：主从复制 ](https://www.cnblogs.com/kismetv/p/9236731.html)
+
+## db相关 ##
+
+[mysql 索引知识概况](https://juejin.im/post/5de85a66f265da33d21e68b7)
+
+## 数据结构 ##
+
+[B Tree 与 B+ Tree](https://www.cnblogs.com/vianzhang/p/7922426.html)

@@ -1,0 +1,6 @@
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Framework.ConsoleDemo.exe.config
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Framework.ConsoleDemo.exe
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Framework.ConsoleDemo.pdb
+G:\dick\git\Document\src\Sample\Framework.Console\obj\Debug\Framework.ConsoleDemo.exe
+G:\dick\git\Document\src\Sample\Framework.Console\obj\Debug\Framework.ConsoleDemo.pdb
+G:\dick\git\Document\src\Sample\Framework.Console\obj\Debug\Framework.ConsoleDemo.csprojAssemblyReference.cache

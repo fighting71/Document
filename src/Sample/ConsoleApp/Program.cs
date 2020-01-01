@@ -19,6 +19,8 @@ namespace ConsoleApp
 
             Console.WriteLine(b);
 
+            LookIL2();
+
             Console.WriteLine("Success");
             
             Console.ReadKey(true);
@@ -37,6 +39,18 @@ namespace ConsoleApp
 
             //castclass  ConsoleApp.Program
             Program g = (Program)a;
+        }
+
+        public static void LookIL2()
+        {
+
+            string str = string.Empty;
+
+            if(str+"" == "")
+            {
+                Console.WriteLine("is empty");
+            }
+
         }
 
     }

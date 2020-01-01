@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
@@ -23,7 +24,7 @@ namespace ConsoleApp.Demo
 
             //Data data = new Data();
             //var type = data.GetType();
-            //            var type = typeof(Data);
+            //var type = typeof(Data);
 
             //var assembly = Assembly.GetCallingAssembly();
             //var type = assembly.GetType(nameof(Data));
