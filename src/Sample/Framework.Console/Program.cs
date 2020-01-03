@@ -1,14 +1,41 @@
-﻿using System;
+﻿using Framework.ConsoleDemo.Menu;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Framework.ConsoleDemo
 {
+
+    [Customer]
     class Program
     {
+
+        [return:Customer]
         static void Main(string[] args)
         {
+
+            try
+            {
+                Console.WriteLine("try1");
+
+                try
+                {
+                    Console.WriteLine("try2");
+                }
+                finally
+                {
+                    Console.WriteLine("finally2");
+                }
+
+            }
+            finally
+            {
+                Console.WriteLine("finally1");
+            }
+
+            Action action = () => { Console.WriteLine("---1"); };
+            Action action2 = () => { Console.WriteLine("---2"); };
 
             dynamic d = 123;
             int num = 1;
