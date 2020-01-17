@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Threading;
-using ConsoleApp.Demo;
+using System.Net.Http;
+using BenchmarkDotNet.Running;
+using Common.TestModule;
 using ConsoleApp.Menu;
 
 namespace ConsoleApp
@@ -11,15 +12,7 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
 
-            //            ReflectorDemo.Run();
-
-            double a = 3;
-
-            double b = a / a++;
-
-            Console.WriteLine(b);
-
-            LookIL2();
+            BenchmarkRunner.Run<Test3>();
 
             Console.WriteLine("Success");
             

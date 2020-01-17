@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Framework.ConsoleDemo.Demo.Test3-20200113-104631</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.12.0, OS=Windows 10.0.17763.914 (1809/October2018Update/Redstone5)
+Intel Core i3-4170 CPU 3.70GHz (Haswell), 1 CPU, 4 logical and 2 physical cores
+  [Host]     : .NET Framework 4.7.2 (4.7.3468.0), X86 LegacyJIT  [AttachedDebugger]
+  DefaultJob : .NET Framework 4.7.2 (4.7.3468.0), X86 LegacyJIT
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th> Method</th><th>Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>BaseTest</td><td>608.5 ms</td><td>6.17 ms</td><td>5.77 ms</td>
+</tr><tr><td>TestInterface</td><td>4,011.2 ms</td><td>111.81 ms</td><td>324.38 ms</td>
+</tr><tr><td>TestAbstract</td><td>3,356.8 ms</td><td>67.06 ms</td><td>192.42 ms</td>
+</tr><tr><td>TestInherit</td><td>3,193.9 ms</td><td>64.17 ms</td><td>81.16 ms</td>
+</tr></tbody></table>
+</body>
+</html>

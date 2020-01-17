@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +14,7 @@ namespace ConsoleApp.Demo
     public class Test
     {
 
-        Test() { }
+        //Test() { }
 
         public delegate void a();
 
@@ -22,6 +23,14 @@ namespace ConsoleApp.Demo
             Console.WriteLine("test");
         }
 
+        [Benchmark]
+        public void Run()
+        {
+            for (int i = 0; i < int.MaxValue; i++)
+            {
+                var j = 123 * 444;
+            }
+        }
 
     }
 }
