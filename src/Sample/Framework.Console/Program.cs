@@ -1,10 +1,12 @@
 ﻿using Common.Tools;
 using Framework.ConsoleDemo.Menu;
+using Framework.ConsoleDemo.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 
 namespace Framework.ConsoleDemo
@@ -18,6 +20,8 @@ namespace Framework.ConsoleDemo
         [return:Customer]
         static void Main(string[] args)
         {
+
+
 
             //Console.WriteLine("first");
 

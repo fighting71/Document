@@ -25,3 +25,7 @@ code: Startup.ConfigureServices(IServiceCollection services) 中.
 Thread.BeginCriticalRegion(); 相关：
 
 [关键区域 critical region](https://blogs.msdn.microsoft.com/bclteam/2005/06/13/constrained-execution-regions-and-other-errata-brian-grunkemeyer/)
+
+### 基础扫盲 ###
+
+[固态/机械硬盘存取](https://sspai.com/post/55277)

@@ -66,3 +66,17 @@ G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\zh-Hans\Microsoft.Co
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Common.dll
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Common.pdb
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\BouncyCastle.Crypto.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\EntityFramework.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\EntityFramework.SqlServer.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Google.Protobuf.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.Entity.EF6.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Renci.SshNet.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Ubiety.Dns.Core.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\EntityFramework.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\EntityFramework.SqlServer.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Google.Protobuf.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.Entity.EF6.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Renci.SshNet.xml
