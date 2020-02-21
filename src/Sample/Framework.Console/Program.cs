@@ -4,6 +4,7 @@ using Framework.ConsoleDemo.Model;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
@@ -11,6 +12,14 @@ using System.Linq;
 
 namespace Framework.ConsoleDemo
 {
+
+    public class Empty
+    {
+        public const string Url = "test";
+
+        public string Id { get; set; }
+
+    }
 
     [Customer]
     class Program
@@ -21,7 +30,9 @@ namespace Framework.ConsoleDemo
         static void Main(string[] args)
         {
 
+            Empty a = new Empty() { Id = "flag" };
 
+            Console.WriteLine(JsonConvert.SerializeObject(a));
 
             //Console.WriteLine("first");
 

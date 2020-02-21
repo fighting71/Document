@@ -80,3 +80,5 @@ G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Google.Protobuf.xml
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.xml
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\MySql.Data.Entity.EF6.xml
 G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Renci.SshNet.xml
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Newtonsoft.Json.dll
+G:\dick\git\Document\src\Sample\Framework.Console\bin\Debug\Newtonsoft.Json.xml
