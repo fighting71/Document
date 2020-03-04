@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Sockets;
 using BenchmarkDotNet.Running;
 using Common.TestModule;
 using ConsoleApp.Menu;
@@ -11,6 +12,8 @@ namespace ConsoleApp
         
         static void Main(string[] args)
         {
+
+            Socket socket = new Socket(SocketType.Stream,ProtocolType.Tcp);
 
             BenchmarkRunner.Run<Test3>();
 
