@@ -1,0 +1,5 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 1 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet restore  /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 in G:\dick\git\Document\src\Sample\ConsoleApp\bin\Release\netcoreapp3.1\d29a22e2-079e-4c33-b449-9f928faacbbb

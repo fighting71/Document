@@ -1,23 +1,153 @@
-﻿using System;
-using System.Collections;
+﻿using Common.Tools;
+using Framework.ConsoleDemo.Menu;
+using Framework.ConsoleDemo.Model;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace Framework.ConsoleDemo
 {
+
+    public class Empty
+    {
+        public const string Url = "test";
+
+        public string Id { get; set; }
+
+    }
+
+    [Customer]
     class Program
     {
+
+
+        [return:Customer]
         static void Main(string[] args)
         {
 
-            dynamic d = 123;
-            int num = 1;
+            Empty a = new Empty() { Id = "flag" };
 
-            Console.WriteLine(d + num);//124
+            Console.WriteLine(JsonConvert.SerializeObject(a));
+
+            //Console.WriteLine("first");
+
+            //SqlTools tools = new SqlTools();
+
+            //BenchmarkRunner.Run<Test3>();
+
+            Console.WriteLine("Success");
 
             Console.ReadKey(true);
 
         }
+
+        #region C# 7.0+
+
+        // 安全指针
+        public static ref int Find(int[] arr)
+        {
+            return ref arr[3];
+        }
+
+        static void Test7()
+        {
+            var arr = new int[4];
+
+            Find(arr) = 2;// 操作影响，即默认返回指针
+
+            var num = Find(arr);
+
+            num = 10;// 操作不影响，即上一行仅接收值 不接收指针
+
+            ref var num2 = ref Find(arr);
+
+            num2 = 10;// 操作影响原数组.
+
+            var num1 = num2 + 10;
+
+            Console.WriteLine(num1);
+
+        }
+
+        #endregion
+
+
+        // 委托编译时会生成对应的类
+        public delegate void ShowSomething<T>(T t);
+
+        // 事件是委托的封装体 是一个特殊(封装了委托相关的add和remove)的结构
+        //public event ShowSomething<int> evt;
+
+        static void Test6()
+        {
+
+            #region C# 语法优化
+            const int a = 123;
+            int b = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                b = 456 * a;
+            }
+            #endregion
+
+            #region 回调函数/委托
+            // lambda表达式实际上就是匿名函数的语法糖，在编译后，会自动创建相应的方法
+            // 委托实例在仅指定一个方法时，实际上就是指向回调方法的引用指针
+            ShowSomething<int> something = (u) => {
+                Console.WriteLine("show something");
+            };
+
+            something.Invoke(1);
+
+            // lambda ==> 匿名函数
+            Action action = () => { Console.WriteLine("---1"); };
+            Action action2 = () => { Console.WriteLine("---2"); };
+            #endregion
+
+            #region 可变类型
+            dynamic d = 123;
+            int num = 1;
+
+            Console.WriteLine(d + num);//124
+            #endregion
+
+        }
+
+        #region C#8.0
+
+        static void Test5(string name)
+        {
+
+            if(name is null)
+            {
+
+            }
+
+            #region swtich语法糖
+
+            // switch case情况较少会改用if判断.
+
+            int flag = 1;
+            bool flag2 = true;
+
+            var flagRes = (flag, flag2) switch
+            {
+                (1, true) => 1,
+                (2, _) => 4,
+                (_, _) => 2
+            };
+
+            #endregion
+
+        }
+
+        #endregion
 
         #region 逆变与协变
 
@@ -42,7 +172,7 @@ namespace Framework.ConsoleDemo
 
         public interface IDemo<out T,in T2>
         {
-            public T Show(T2 t2);
+            T Show(T2 t2);
         }
 
         public class Demo<T, T2> : IDemo<T, T2>
@@ -201,5 +331,6 @@ namespace Framework.ConsoleDemo
         }
 
         #endregion
+
     }
 }

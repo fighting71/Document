@@ -10,6 +10,13 @@
 	3. Finalize(终结器)
 	4. 短弱引用
 8. 2019整理
+9. 《回调方法/委托/事件》
+10. 读懂IL
+	1. cil managed与runtime managed
+11. 多线程
+	1. RX库(github)
+12. 了解程序的组成(IO Socket 内存 GUI CPU )
+13. 静态织入 （MS Builder 注入 --》 IL注入 ）
 
 
 ----------
