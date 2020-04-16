@@ -56,3 +56,5 @@ G:\dick\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\zh-Hans\Micro
 G:\dick\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
 G:\dick\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Management.dll
 G:\dick\git\Document\src\Sample\ConsoleApp\obj\Debug\netcoreapp3.1\ConsoleApp.csproj.CopyComplete
+G:\dick\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\Common.dll
+G:\dick\git\Document\src\Sample\ConsoleApp\bin\Debug\netcoreapp3.1\Common.pdb

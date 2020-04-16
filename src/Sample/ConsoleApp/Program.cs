@@ -7,15 +7,36 @@ using ConsoleApp.Menu;
 
 namespace ConsoleApp
 {
+
+    public class Fly<T>
+    {
+
+        static Fly()
+        {// 泛型缓存
+            Console.WriteLine($"Fly create by {typeof(T).Name}");
+        }
+
+    }
+
     class Program
     {
         
+        class A { }
+
+        class B { }
+
         static void Main(string[] args)
         {
 
-            Socket socket = new Socket(SocketType.Stream,ProtocolType.Tcp);
+            new Fly<Program.A>();
+            new Fly<Program.A>();
+            new Fly<Program.B>();
+            new Fly<int>();
+            new Fly<string>();
 
-            BenchmarkRunner.Run<Test3>();
+            //Socket socket = new Socket(SocketType.Stream,ProtocolType.Tcp);
+
+            //BenchmarkRunner.Run<Test3>();
 
             Console.WriteLine("Success");
             
