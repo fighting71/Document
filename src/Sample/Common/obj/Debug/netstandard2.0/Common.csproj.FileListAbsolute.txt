@@ -1,8 +1,0 @@
-G:\dick\git\Document\src\Sample\Common\bin\Debug\netstandard2.0\Common.deps.json
-G:\dick\git\Document\src\Sample\Common\bin\Debug\netstandard2.0\Common.dll
-G:\dick\git\Document\src\Sample\Common\bin\Debug\netstandard2.0\Common.pdb
-G:\dick\git\Document\src\Sample\Common\obj\Debug\netstandard2.0\Common.csprojAssemblyReference.cache
-G:\dick\git\Document\src\Sample\Common\obj\Debug\netstandard2.0\Common.AssemblyInfoInputs.cache
-G:\dick\git\Document\src\Sample\Common\obj\Debug\netstandard2.0\Common.AssemblyInfo.cs
-G:\dick\git\Document\src\Sample\Common\obj\Debug\netstandard2.0\Common.dll
-G:\dick\git\Document\src\Sample\Common\obj\Debug\netstandard2.0\Common.pdb

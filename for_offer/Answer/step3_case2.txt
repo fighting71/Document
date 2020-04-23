@@ -1,0 +1,17 @@
+ 3.根据2进行计划定制
+
+    skip company
+
+    - 熟悉dotnetcore 3.1(熟悉新技术)
+    - 了解前端主流框架(Vue、React、AngularJS) 任意一款； [能够帮助前端更好的进行对接？]
+    - 能够熟练运用ORM框架(EF Core、Dapper、FreeSql)任意一种 [其实只要掌握住ado.net 明白ORM的设计初衷 后面就是看对于ORM框架优化的熟练度了]
+    - 熟练或者了解过RPC框架(GRPC、Thrift、其他)任意一种 [这方面算的话Odata应该可以算是一种... 弱不可言]
+    - 熟练使用git、svn等开发工具 [团队开发基本工具]
+    - 熟悉Mysql、PostgreSql、Sql server数据库开发及数据库设计； [盲猜没有dba，后端开发直接弄设计...]
+    - 熟悉Redis、Mongodb、常用的NoSql数据库; [非关系型数据库，即懂得缓存数据库开发]
+    - 了解一些常用的消息队列 [采用中间件的风格进行开发]
+    - 精通面向对象、面向切面编程; [对于功能设计有一定的掌握]
+
+ res:failure
+
+ reson:...猜不透

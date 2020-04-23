@@ -1,0 +1,4 @@
+
+windows server 
+
+	所谓windows server 是一种项目类型，主要用来开发windows 下的service服务
