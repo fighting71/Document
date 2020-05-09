@@ -1,5 +1,5 @@
 
-**CAP源码追踪（一）消息是如何执行的，执行后又是如何执行回调的**
+**CAP.DotNet源码追踪（一）消息是如何执行的，执行后又是如何执行回调的**
 
 ----------
 
@@ -7,6 +7,10 @@
 
 .NET Core 3.1
 nuget包：DotNetCore.CAP.RabbitMQ 3.0.2
+
+### 目录 ###
+
+[CAP.DotNet源码追踪（一）消息是如何执行的，执行后又是如何执行回调的](https://www.cnblogs.com/monster17/p/12852266.html)
 
 ### 前言 ###
 
@@ -159,20 +163,511 @@ cancellationToken - 略
 
 订阅/接收消息 -> 初始启动一个**BackgroundService**去扫描消息进行执行
 
+既然找到了接收工作的地方，那我们就来看看它怎么实现的吧：**Bootstrapper.ExecuteAsync**
+
+	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        await BootstrapAsync(stoppingToken);
+    }
+
+	public async Task BootstrapAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogDebug("### CAP background task is starting.");
+
+        try
+        {
+            await Storage.InitializeAsync(stoppingToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Initializing the storage structure failed!");
+        }
+
+        stoppingToken.Register(() =>
+        {
+            _logger.LogDebug("### CAP background task is stopping.");
+
+            foreach (var item in Processors)
+            {
+                try
+                {
+                    item.Dispose();
+                }
+                catch (OperationCanceledException ex)
+                {
+                    _logger.ExpectedOperationCanceledException(ex);
+                }
+            }
+        });
+
+        await BootstrapCoreAsync();
+
+        _logger.LogInformation("### CAP started!");
+    }
+
+① **await Storage.InitializeAsync(stoppingToken);** 见名思意，应该是存储相关的初始化，例如：CAP在使用db存储时初始化会自动创建对应的表
+
+查看**Processors**的定义：
+
+	private IEnumerable<IProcessingServer> Processors { get; }
+
+② 当**stoppingToken**取消时释放所有的IProcessingServer
+
+③ await BootstrapCoreAsync(); 
+
+	protected virtual Task BootstrapCoreAsync()
+    {
+        foreach (var item in Processors)
+        {
+            try
+            {
+                item.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.ProcessorsStartedError(ex);
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
+即是启动所有的**IProcessingServer**
+
+那么**IProcessingServer**具体有哪些实现呢？
+
+既然有使用的地方就肯定有注册的地方，再次回到**AddCAP**注入处，通过源码可以看到：
+
+	services.TryAddEnumerable(ServiceDescriptor.Singleton<IProcessingServer, CapProcessingServer>());
+	services.TryAddEnumerable(ServiceDescriptor.Singleton<IProcessingServer, ConsumerRegister>());
+
+注入了**CapProcessingServer**和**ConsumerRegister**
+
+#### CapProcessingServer ####
+
+略
+
+#### ConsumerRegister ####
+
+找到**ConsumerRegister.Start**:
+
+	public void Start()
+	{
+	    var groupingMatches = _selector.GetCandidatesMethodsOfGroupNameGrouped();
+	
+	    foreach (var matchGroup in groupingMatches)
+	    {
+	        for (int i = 0; i < _options.ConsumerThreadCount; i++)
+	        {
+	            Task.Factory.StartNew(() =>
+	            {
+	                try
+	                {
+	                    using (var client = _consumerClientFactory.Create(matchGroup.Key))
+	                    {
+	                        _serverAddress = client.BrokerAddress;
+	
+	                        RegisterMessageProcessor(client);
+	
+	                        client.Subscribe(matchGroup.Value.Select(x => x.Attribute.Name));
+	
+	                        client.Listening(_pollingDelay, _cts.Token);
+	                    }
+	                }
+	                catch (OperationCanceledException)
+	                {
+	                    //ignore
+	                }
+	                catch (BrokerConnectionException e)
+	                {
+	                    _isHealthy = false;
+	                    _logger.LogError(e, e.Message);
+	                }
+	                catch (Exception e)
+	                {
+	                    _logger.LogError(e, e.Message);
+	                }
+	            }, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+	        }
+	    }
+	    _compositeTask = Task.CompletedTask;
+	}
+
+*step by step*:
+
+a:获取所有组别及其相关信息[即获取所有有**TopicAttribute**特性标记的信息(from Interface or Controller)]
+
+	var groupingMatches = _selector.GetCandidatesMethodsOfGroupNameGrouped();
+
+具体实现（略：通过Type查找Attribute，再筛选相符合的信息）
+
+b:遍历这些组别，通过组别名称，创建相应的消费者**client**
+
+c:注册client的消息接收事件
+
+	 RegisterMessageProcessor(client);
+
+d:开启订阅
+
+	client.Subscribe(matchGroup.Value.Select(x => x.Attribute.Name));
+
+e:开启监听
+
+	client.Listening(_pollingDelay, _cts.Token);
+
+可见**ConsumerRegister.Start**的主要功能就是消费者的前置初始化，根据代码中的特性标记开启相应的订阅和监听，既然消息监听已经开启了，那消息是如何处理的呢？
+
+让我们回过头来关注“注册client的消息接收事件”，“注册client的消息接收事件”即是定义消息的具体实现，查看源码：
+
+	private void RegisterMessageProcessor(IConsumerClient client)
+	{
+	    client.OnMessageReceived += async (sender, transportMessage) =>
+	    {
+	        _logger.MessageReceived(transportMessage.GetId(), transportMessage.GetName());
+	
+	        long? tracingTimestamp = null;
+	        try
+	        {
+	            tracingTimestamp = TracingBefore(transportMessage, _serverAddress);
+	
+	            var name = transportMessage.GetName();
+	            var group = transportMessage.GetGroup();
+	
+	            Message message;
+	
+	            var canFindSubscriber = _selector.TryGetTopicExecutor(name, group, out var executor);
+	            try
+	            {
+	                if (!canFindSubscriber)
+	                {
+	                    var error = $"Message can not be found subscriber. Name:{name}, Group:{group}. {Environment.NewLine} see: https://github.com/dotnetcore/CAP/issues/63";
+	                    var ex = new SubscriberNotFoundException(error);
+	
+	                    TracingError(tracingTimestamp, transportMessage, client.BrokerAddress, ex);
+	
+	                    throw ex;
+	                }
+	
+	                var type = executor.Parameters.FirstOrDefault(x => x.IsFromCap == false)?.ParameterType;
+	                message = await _serializer.DeserializeAsync(transportMessage, type);
+	            }
+	            catch (Exception e)
+	            {
+	                transportMessage.Headers.Add(Headers.Exception, nameof(SerializationException) + "-->" + e.Message);
+	                var dataUri = $"data:{transportMessage.Headers[Headers.Type]};base64," + Convert.ToBase64String(transportMessage.Body);
+	                message = new Message(transportMessage.Headers, dataUri);
+	            }
+	
+	            if (message.HasException())
+	            {
+	                var content = StringSerializer.Serialize(message);
+	
+	                _storage.StoreReceivedExceptionMessage(name, group, content);
+	
+	                client.Commit(sender);
+	
+	                try
+	                {
+	                    _options.FailedThresholdCallback?.Invoke(new FailedInfo
+	                    {
+	                        ServiceProvider = _serviceProvider,
+	                        MessageType = MessageType.Subscribe,
+	                        Message = message
+	                    });
+	
+	                    _logger.ConsumerExecutedAfterThreshold(message.GetId(), _options.FailedRetryCount);
+	                }
+	                catch (Exception e)
+	                {
+	                    _logger.ExecutedThresholdCallbackFailed(e);
+	                }
+	
+	                TracingAfter(tracingTimestamp, transportMessage, _serverAddress);
+	            }
+	            else
+	            {
+	                var mediumMessage = _storage.StoreReceivedMessage(name, group, message);
+	                mediumMessage.Origin = message;
+	
+	                client.Commit(sender);
+	
+	                TracingAfter(tracingTimestamp, transportMessage, _serverAddress);
+	
+	                _dispatcher.EnqueueToExecute(mediumMessage, executor);
+	            }
+	        }
+	        catch (Exception e)
+	        {
+	            _logger.LogError(e, "An exception occurred when process received message. Message:'{0}'.", transportMessage);
+	
+	            client.Reject(sender);
+	
+	            TracingError(tracingTimestamp, transportMessage, client.BrokerAddress, e);
+	        }
+	    };
+	
+	    client.OnLog += WriteLog;
+	}
+
+*side by side~*
+
+a: 注册接收时的实现
+
+	client.OnMessageReceived += async (sender, transportMessage) =>
+
+查看**OnMessageReceived**定义：
+
+	event EventHandler<TransportMessage> OnMessageReceived;
+
+故此处就是添加一个委托实现，那么具体的实现便是我们的消息处理了
+
+b: 获取消息订阅(执行)者
+
+	var canFindSubscriber = _selector.TryGetTopicExecutor(name, group, out var executor);
+
+查找我们的消息执行者(根据name,group) [内部实现略：反射配合特性]
+
+c: 获取消息内容
+
+	var type = executor.Parameters.FirstOrDefault(x => x.IsFromCap == false)?.ParameterType;
+    message = await _serializer.DeserializeAsync(transportMessage, type);
+
+ 查看**_serializer**定义：
+
+	private readonly ISerializer _serializer;
+
+ 具体获取：
+
+	_serializer = serviceProvider.GetService<ISerializer>();
+
+ *故我们可以通过实现ISerializer再进行注入，实现我们自己的消息解析*
+
+ 默认实现：略[可自行查看DotNetCore.CAP.Serialization.JsonUtf8Serializer]
+
+d: 存储接收消息
+
+	var mediumMessage = _storage.StoreReceivedMessage(name, group, message);
+
+ 在CAP的db存储中，有着**published**和**received**两个表，发送存储**published**，接收存储**received**
+
+e: 处理消息
+
+	_dispatcher.EnqueueToExecute(mediumMessage, executor);
+
+ 查看其定义：
+
+	private readonly IDispatcher _dispatcher;
+
+ 也是和**_serializer**类似通过IOC容器获取
+
+然后让我们回到**AddCAP**查看其注入类
+
+	services.TryAddSingleton<IDispatcher, Dispatcher>();
+
+查看**Dispatcher.EnqueueToExecute**实现：
+
+	public void EnqueueToExecute(MediumMessage message, ConsumerExecutorDescriptor descriptor)
+    {
+        _receivedChannel.Writer.TryWrite((message, descriptor));
+    }
+
+也是和发送一样，通过**Channel**进行传递，好了，我们就来看看这个**_receivedChannel**的定义：
+
+	private readonly Channel<(MediumMessage, ConsumerExecutorDescriptor)> _receivedChannel;
+
+私有字段-》外界无法访问，那么处理要不在子类中，要不就是直接在此类中，查看**Dispatcher**的构造：
+
+	public Dispatcher(ILogger<Dispatcher> logger,
+            IMessageSender sender,
+            IOptions<CapOptions> options,
+            ISubscribeDispatcher executor)
+    {
+        _logger = logger;
+        _sender = sender;
+        _executor = executor;
+
+        _publishedChannel = Channel.CreateUnbounded<MediumMessage>(new UnboundedChannelOptions() { SingleReader = true, SingleWriter = true });
+        _receivedChannel = Channel.CreateUnbounded<(MediumMessage, ConsumerExecutorDescriptor)>();
+
+        Task.Factory.StartNew(Sending, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+
+        Task.WhenAll(Enumerable.Range(0, options.Value.ConsumerThreadCount)
+            .Select(_ => Task.Factory.StartNew(Processing, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default)).ToArray());
+    }
+
+a: 初始化
+	_receivedChannel = Channel.CreateUnbounded<(MediumMessage, ConsumerExecutorDescriptor)>();
+
+
+看看**CreateUnbounded**的说明：
+
+	Creates an unbounded channel usable by any number of readers and writers concurrently.
+	创建可由任意数量的读取器和写入器并发使用的无限制通道。
+
+一个允许并发处理的通道?
+
+b: 使用
+
+	Task.WhenAll(Enumerable.Range(0, options.Value.ConsumerThreadCount)
+    .Select(_ => Task.Factory.StartNew(Processing, _cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default)).ToArray());
+
+创建了**options.Value.ConsumerThreadCount**个**Task**(并设置**TaskCreationOptions.LongRunning**-长期运行)
+
+再查看其**Processing**实现：
+
+	private async Task Processing()
+    {
+        try
+        {
+            while (await _receivedChannel.Reader.WaitToReadAsync(_cts.Token))
+            {
+                while (_receivedChannel.Reader.TryRead(out var message))
+                {
+                    await _executor.DispatchAsync(message.Item1, message.Item2, _cts.Token);
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // expected
+        }
+    }
+	
+查看**ChannelReader<T>.WaitToReadAsync**说明：返回将在有数据可供读取时完成的 ValueTask<TResult>。
+
+**TryRead**便是取出消息
+
+<伪代码>:
+
+	循环(等待Channel中有数据写入)
+	{
+		循环(尝试从通道中读取项)
+		{
+			处理消息
+		}
+	}
+
+消息处理：
+
+	 await _executor.DispatchAsync(message.Item1, message.Item2, _cts.Token);
+
+结合构造和**Dispatcher**的构建可以看出**_executor**是通过IOC容器获取的，再次查看**AddCAP**的注册：
+
+	services.TryAddSingleton<ISubscribeDispatcher, SubscribeDispatcher>();
+
+查找**SubscribeDispatcher.DispatchAsync**
+
+	public async Task<OperateResult> DispatchAsync(MediumMessage message, ConsumerExecutorDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        bool retry;
+        OperateResult result;
+        do
+        {
+            var executedResult = await ExecuteWithoutRetryAsync(message, descriptor, cancellationToken);
+            result = executedResult.Item2;
+            if (result == OperateResult.Success)
+            {
+                return result;
+            }
+            retry = executedResult.Item1;
+        } while (retry);
+
+        return result;
+    }
+
+调用**ExecuteWithoutRetryAsync**并设计了重试机制
+
+	private async Task<(bool, OperateResult)> ExecuteWithoutRetryAsync(MediumMessage message, ConsumerExecutorDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        if (message == null)
+        {
+            throw new ArgumentNullException(nameof(message));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            var sp = Stopwatch.StartNew();
+
+            await InvokeConsumerMethodAsync(message, descriptor, cancellationToken);
+
+            sp.Stop();
+
+            await SetSuccessfulState(message);
+
+            _logger.ConsumerExecuted(sp.Elapsed.TotalMilliseconds);
+
+            return (false, OperateResult.Success);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An exception occurred while executing the subscription method. Topic:{message.Origin.GetName()}, Id:{message.DbId}");
+
+            return (await SetFailedState(message, ex), OperateResult.Failed(ex));
+        }
+    }
+
+ 1.核心执行**await InvokeConsumerMethodAsync(message, descriptor, cancellationToken);**
+
+ 2.异常处理**(await SetFailedState(message, ex), OperateResult.Failed(ex));** ： 略
+
+查看**SubscribeDispatcher.InvokeConsumerMethodAsync**:
+
+	private async Task InvokeConsumerMethodAsync(MediumMessage message, ConsumerExecutorDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        var consumerContext = new ConsumerContext(descriptor, message.Origin);
+        var tracingTimestamp = TracingBefore(message.Origin, descriptor.MethodInfo);
+        try
+        {
+            var ret = await Invoker.InvokeAsync(consumerContext, cancellationToken);
+
+            TracingAfter(tracingTimestamp, message.Origin, descriptor.MethodInfo);
+
+            if (!string.IsNullOrEmpty(ret.CallbackName))
+            {
+                var header = new Dictionary<string, string>()
+                {
+                    [Headers.CorrelationId] = message.Origin.GetId(),
+                    [Headers.CorrelationSequence] = (message.Origin.GetCorrelationSequence() + 1).ToString()
+                };
+
+                await _provider.GetService<ICapPublisher>().PublishAsync(ret.CallbackName, ret.Result, header, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            //ignore
+        }
+        catch (Exception ex)
+        {
+            var e = new SubscriberExecutionFailedException(ex.Message, ex);
+
+            TracingError(tracingTimestamp, message.Origin, descriptor.MethodInfo, e);
+
+            throw e;
+        }
+    }
+
+ 1.核心执行：
+
+	var ret = await Invoker.InvokeAsync(consumerContext, cancellationToken);
+
+ 又是一个通过IOC容器跳转执行，具体执行：略-通过**consumerContext**参数值和反射拿到对应执行方法并通过IOC容器获取对应的对象，执行相应的方法
+
+ 2.回调处理
+
+	await _provider.GetService<ICapPublisher>().PublishAsync(ret.CallbackName, ret.Result, header, cancellationToken);
+
+再放一下方法定义
+
+	Task PublishAsync<T>(string name, [CanBeNull] T contentObj, IDictionary<string, string> headers, CancellationToken cancellationToken = default);
+
+ 所以最终答案就是：**当发布时设置了CallbackName后，当消息执行完后，会发布一个以CallbackName为name,消息返回值为消息体的消息**
+
+>>>>>小红:小明好感度+100~<<<<<
 
 ----------
+参考博文：
 
-至于返回值的作用，从callbackName可进行一个猜想：
-
-何为回调，即是执行完后再调用这个方法，但这里只定义了一个callbackName,相对于name也是一个名称，
-
-我们假设callbackName和name也是消息id,这时你就会发现这个回调的消息，只有消息id没有消息内容，那么消息内容为什么没有呢？  
-
-我们再大胆的猜测一下，订阅消息执行完后，拿它的返回值作为回调消息的消息内容，不就有消息内容了吗
-
-over~
-
-----------
-
-
-...待更
+[谈谈.NET Core中基于Generic Host来实现后台任务](https://www.cnblogs.com/catcher1994/p/9961228.html)
