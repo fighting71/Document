@@ -1,0 +1,14 @@
+
+启动：
+
+	nginx.exe 或者 start nginx 
+	
+查看是否启动:
+
+	tasklist /fi "imagename eq nginx.exe"
+	
+关闭:
+
+	(1)输入nginx命令  nginx -s stop(快速停止nginx)  或  nginx -s quit(完整有序的停止nginx)
+
+	(2)使用taskkill   taskkill /f /t /im nginx.exe

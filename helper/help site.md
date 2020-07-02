@@ -12,9 +12,11 @@ code: Startup.ConfigureServices(IServiceCollection services) 中.
             options.JsonSerializerOptions.PropertyNamingPolicy = null;
         });
 
-### 解决 .net core 3.0升级相关问题 (json格式返回，swagger显示格式问题等) ###
+### .net core help site ###
 
-[https://www.cnblogs.com/laozhang-is-phi/p/11520048.html#autoid-5-3-0](https://www.cnblogs.com/laozhang-is-phi/p/11520048.html#autoid-5-3-0 "博文")
+[解决 .net core 3.0升级相关问题 (json格式返回，swagger显示格式问题等)](https://www.cnblogs.com/laozhang-is-phi/p/11520048.html#autoid-5-3-0)
+
+[.net core 3.1注入Options](https://www.lzys.cc/p/1446771.html)
 
 ### C# 源码地址 ###
 
@@ -29,3 +31,12 @@ Thread.BeginCriticalRegion(); 相关：
 ### 基础扫盲 ###
 
 [固态/机械硬盘存取](https://sspai.com/post/55277)
+
+### RabbitMQ ###
+
+[RabbitMQ.Client api说明](https://www.cnblogs.com/hsyzero/p/6297644.html)
+
+### C# Function ###
+
+[提升循环块小的执行效率](https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-speed-up-small-loop-bodies)
+
