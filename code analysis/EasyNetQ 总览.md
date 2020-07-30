@@ -15,3 +15,30 @@ EasyNetQ消费处理：EasyNetQ.Consumer.ConsumerDispatcher - 轮询
 EasyNetQ 订阅方式： 通过订阅检索消息
 订阅地址：EasyNetQ.Consumer.InternalConsumer
 MQ订阅触发：EasyNetQ.Consumer.BasicConsumer - 监听
+
+ClientCommandDispatcherSingleton
+
+
+消息监听:
+
+	RabbitAdvancedBus
+
+	public IDisposable Consume(IQueue queue, Action<IHandlerRegistration> addHandlers, Action<IConsumerConfiguration> configure)
+
+消息处理订阅: (down to up)
+
+添加处理:**EasyNetQ.Consumer.HandlerCollection.Add**
+
+	public IHandlerRegistration Add<T>(Func<IMessage<T>, MessageReceivedInfo, Task> handler) where T : class
+
+**RabbitAdvancedBus.Consume**
+
+	public IDisposable Consume<T>(IQueue queue, Func<IMessage<T>, MessageReceivedInfo, Task> onMessage, Action<IConsumerConfiguration> configure) where T : class
+
+**RabbitBus**
+
+	public virtual ISubscriptionResult SubscribeAsync<T>(string subscriptionId, Func<T, Task> onMessage, Action<ISubscriptionConfiguration> configure) where T : class
+
+ key code : 
+
+	IDisposable consumerCancellation = advancedBus.Consume(queue, (IMessage<T> message, MessageReceivedInfo messageReceivedInfo) => ...
