@@ -1,0 +1,4 @@
+ 
+ 生成表对应的类及其配置信息：
+ 
+ Scaffold-DbContext "Server=;Database=;User ID=sa;Password=123;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -ContextDir Models -Context UAreaContext -Table "test","users","team" -Force
