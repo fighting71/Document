@@ -1,0 +1,13 @@
+
+.net core api启动
+WebApplication1.exe --urls=http://0.0.0.0:5001
+
+
+F:\WorkSpace\UA_Foundation\Application\ZeusSys.AdminApi\bin\Debug\netcoreapp3.1
+ZeusSys.AdminApi.exe --urls=http://0.0.0.0:5005
+
+查看端口占用:
+netstat -aon|findstr "443" 
+
+查看进程信息
+tasklist|findstr "4"
