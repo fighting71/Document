@@ -14,3 +14,5 @@
 ### 设置类模板 ###
 
 大概路径：C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\ItemTemplates\CSharp\Code\2052\Class
+
+	时间表示: $time$
