@@ -16,3 +16,11 @@
 大概路径：C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\ItemTemplates\CSharp\Code\2052\Class
 
 	时间表示: $time$
+
+### 常用快捷键 ###
+
+快速提示:	View.QuickActions
+
+转到类型:	Edit.GoToType
+
+转到成员:	Edit.GoToMember

@@ -1,0 +1,8 @@
+
+rdbtools: https://github.com/sripathikrishnan/redis-rdb-tools
+
+下载Releases下的 zip
+
+安装：python setup.py install
+
+生成分析表格 rdb -c memory dump.rdb > ./du4.csv

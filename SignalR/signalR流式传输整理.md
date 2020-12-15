@@ -44,7 +44,7 @@
 
 core 2.1示例:
 
-	public ChannelReader<int> DelayCounter(int delay)
+	public ChannelReader<int> DelayCounter(int delay, CancellationToken cancellationToken)
     {
 
         Channel<int> channel = Channel.CreateUnbounded<int>();
@@ -113,6 +113,9 @@ js socket 具体产生的消息:
 3. 完成消息-调用完成/流传输完成
 4. 流调用消息
 5. 取消调用消息
+
+		取消调用时只需要传递 invocationId(当时获取流的id) 和 type(5) 即可取消，==> 关闭页面会自动取消
+
 6. ping 心跳
 7. 连接关闭消息
 
