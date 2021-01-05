@@ -1,0 +1,39 @@
+sqlserver 查找
+
+--杀死某个进程
+KILL 55
+
+--显示死锁相关信息
+--exec sp_who2 63
+
+--查询死锁
+SELECT 
+    es.session_id,
+    database_name = DB_NAME(er.database_id),
+    er.cpu_time,
+    er.reads,
+    er.writes,
+    er.logical_reads,
+    login_name,
+    er.status,
+    blocking_session_id,
+    wait_type,
+    individual_query = SUBSTRING (qt.text, er.statement_start_offset/2, (CASE WHEN er.statement_end_offset = -1 THEN LEN(CONVERT(NVARCHAR(MAX), qt.text)) * 2 ELSE er.statement_end_offset END - er.statement_start_offset)/2),
+    parent_query = qt.text,
+    program_name,
+    host_name,
+    nt_domain,
+    start_time
+FROM 
+    sys.dm_exec_requests er
+    INNER JOIN sys.dm_exec_sessions es ON er.session_id = es.session_id
+    CROSS APPLY sys.dm_exec_sql_text(er.sql_handle)as qt
+WHERE 
+    es.session_id = 63   
+    AND es.session_Id NOT IN (@@SPID) 
+ORDER BY 
+    1, 2
+	
+-- 查看某个表当前的锁占用
+select   request_session_id   spid,OBJECT_NAME(resource_associated_entity_id) [table_name]   
+from   sys.dm_tran_locks where resource_type='OBJECT'
