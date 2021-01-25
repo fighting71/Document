@@ -1,3 +1,9 @@
+食用方法：
+
+Tools->Options->Advanced->Custom HTML Head Content->HTML Head Editor->粘贴即可
+
+----------
+
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
         var div1 = document.createElement("div");
