@@ -1,0 +1,7 @@
+
+--- 查看bigkeys
+redis-cli -p 6379 -a uareacom@china --bigkeys
+
+redis-cli -h{ip} -p{port} --bigkeys
+
+redis-cli -h {ip} -p {port} -a {username}@{pwd} --bigkeys

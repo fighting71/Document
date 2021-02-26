@@ -1,0 +1,43 @@
+
+1.
+	desc:
+		对于在el-table>el-table-column中 使用v-if v-else 创建的el-button，若在外界删除其中的一个按钮，v-if和v-else都进不去 即两个按钮都不显示
+		
+		而且会影响mounted 中的处理，导致翻页未删除按钮
+		
+	think reason: el-button 进行了复用... 干掉了这一行就没了
+	solv: 使用 :style="!flag ? 'display:none;' : ''" 创建两个按钮  删除其中一个不影响另外一个.
+	
+	
+2. el-table 去除边框:
+
+	.el-table {
+	  border-top: 0;
+	  border-right: 0;
+	  /* border-bottom: 0; */
+	  border: 0;
+	}
+	.el-table::before {
+	  left: 0;
+	  bottom: 0;
+	  width: 100%;
+	  height: 0px;
+	}
+	.el-table--border::after {
+	  top: 0;
+	  right: 0;
+	  width: 0px;
+	  height: 100%;
+	}
+
+	.has-gutter tr th:first-child {
+	  border-left: 1px solid #dfe6ec;
+	}
+
+	.el-table td:first-child {
+	  border-left: 1px solid #dfe6ec;
+	}
+
+	.has-gutter tr th {
+	  border-top: 1px solid #dfe6ec;
+	}
