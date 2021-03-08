@@ -1,0 +1,24 @@
+
+
+按时间粒度统计有多少用户：
+
+	error solution:
+	
+		.GroupBy(u => new { u.AddTime.Year, u.AddTime.Month, u.AddTime.Day, u.AddTime.Hour, u.FacilityId })
+		.Select(u => new SummaryVisitorDto
+		 {
+			 AddTime = new DateTime(u.Key.Year, u.Key.Month, u.Key.Day, u.Key.Hour, 0, 0),
+			 Count = u.Count()
+		 })
+	 
+	 错误--- 此处的Count是按时间+用户粒度统计有多少条数据...
+	 
+	right solution:
+		
+		.GroupBy(u => new { u.AddTime.Year, u.AddTime.Month, u.AddTime.Day, u.AddTime.Hour, u.FacilityId })
+				 .GroupBy(u => new { u.Key.Year, u.Key.Month, u.Key.Day, u.Key.Hour })
+				 .Select(u => new SummaryVisitorDto
+				 {
+					 AddTime = new DateTime(u.Key.Year, u.Key.Month, u.Key.Day, u.Key.Hour, 0, 0),
+					 Count = u.Count()
+				 })

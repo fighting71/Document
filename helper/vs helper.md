@@ -14,8 +14,19 @@
 ### 设置类模板 ###
 
 大概路径：C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\ItemTemplates\CSharp\Code\2052\Class
+*不行就找1033 或者其他类似文件夹...*
 
 	时间表示: $time$
+
+    /// <summary>
+    /// @auth : monster
+    /// @since : $time$
+    /// @source : 
+    /// @des : 
+    /// </summary>
+    public class $safeitemrootname$
+    {
+    }
 
 ### 常用快捷键 ###
 
