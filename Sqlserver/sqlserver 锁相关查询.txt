@@ -29,8 +29,7 @@ FROM
     INNER JOIN sys.dm_exec_sessions es ON er.session_id = es.session_id
     CROSS APPLY sys.dm_exec_sql_text(er.sql_handle)as qt
 WHERE 
-    es.session_id = 63   
-    AND es.session_Id NOT IN (@@SPID) 
+	es.session_Id NOT IN (@@SPID) 
 ORDER BY 
     1, 2
 	
