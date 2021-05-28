@@ -11,3 +11,6 @@ netstat -aon|findstr "443"
 
 查看进程信息
 tasklist|findstr "4"
+
+
+ZeusSys.exe --urls=http://0.0.0.0:5005

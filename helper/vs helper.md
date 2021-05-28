@@ -28,6 +28,10 @@
     {
     }
 
+**可能的地址：**
+
+- 5/28/2021 9:58:22 AM C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\ItemTemplates\CSharp\Code\1033\Class
+
 ### 常用快捷键 ###
 
 快速提示:	View.QuickActions
