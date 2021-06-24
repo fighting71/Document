@@ -34,3 +34,16 @@ sql说明:
 	ORDER BY (SELECT COUNT(id) FROM Log) -- 作为排序列 
 
 	示例生成 √ 
+
+#### join 中指定多个条件 ####
+
+示例：
+
+		from order in db.T_ClientWorkOrder
+     join
+     work in db.T_ClientWorkOrder_Work on order.ID equals work.FK_OrderId
+     join
+     nodeconfig in db.T_ClientWorkOrder_NodeConfig  on new { key1 = work.NodeKey, key2 = order.ProjectId } equals new { key1 = nodeconfig.NodeKey, key2 = nodeconfig.ProjectId }
+	where order.OrderCode == orderCode
+
+使用匿名类
