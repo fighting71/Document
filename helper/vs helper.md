@@ -39,3 +39,7 @@
 转到类型:	Edit.GoToType
 
 转到成员:	Edit.GoToMember
+
+### 字体 ###
+
+Consolas

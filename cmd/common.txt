@@ -1,4 +1,8 @@
 
+设置环境变量：
+
+SET ASPNETCORE_ENVIRONMENT=development
+
 .net core api启动
 WebApplication1.exe --urls=http://0.0.0.0:5001
 
@@ -14,3 +18,6 @@ tasklist|findstr "4"
 
 
 ZeusSys.exe --urls=http://0.0.0.0:5005
+
+
+Matching.API.exe --urls=http://0.0.0.0:5032
